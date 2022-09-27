@@ -38,7 +38,7 @@ jobs:
         path: allure-report/
         retention-days: 30
     - name: Push to repository
-      uses: cpina/github-action-push-to-another-repository@redmine-project-playwright-allure
+      uses: cpina/github-action-push-to-another-repository@master
       if: always()
       env:
         API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
