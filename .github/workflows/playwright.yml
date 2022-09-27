@@ -19,16 +19,16 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/upload-artifact@v2
+    - uses: actions/checkout@v2
       with:
         repository: AndryZhidkih/Redmine-Project
         ref: allure-report
         path: ./docs
     - name: Copy History
       if: always()
-      run: cp -r $(pwd)/docs/history/.  $(pwd)/allure-results/history
+      run: cp -r $(pwd)/docs/history/. $(pwd)/allure-results/history
     - name: Generate Allure Report
-      run: npm run reportGenerate
+      run: npm run generate
     - uses: actions/upload-artifact@v2
       if: always()
       with:
@@ -36,7 +36,7 @@ jobs:
         path: allure-report/
         retention-days: 30
     - name: Push to repository
-      uses: cpina/github-action-push-to-another-repository@master
+      uses: cpina/github-action-push-to-another-repository@main
       if: always()
       env:
         API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
@@ -47,3 +47,4 @@ jobs:
         user-email: andry.zhidkikh@gmail.com
         target-branch: allure-report
 
+  
