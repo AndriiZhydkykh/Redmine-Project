@@ -18,10 +18,34 @@ jobs:
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
-      run: npm run test
+      run: npm run tests
+    - uses: actions/upload-artifact@v2
+
+    
+      with:
+        repository: AndryZhidkih/Redmine-Project
+        ref: allure-report
+        path: ./docs
+    - name: Copy History
+      if: always()
+      run: cp -r $(pwd)/docs/history/. $(pwd)/allure-results/history
+    - name: Generate Allure Report
+      run: npm run reportGenerate
     - uses: actions/upload-artifact@v2
       if: always()
       with:
-        name: playwright-report
-        path: playwright-report/
+        name: allure-report
+        path: allure-report/
         retention-days: 30
+    - name: Push to repository
+      uses: cpina/github-action-push-to-another-repository@redmine-project-playwright-allure
+      if: always()
+      env:
+        API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
+      with:
+        source-directory: 'allure-report'
+        destination-github-username: 'AndryZhidkih'
+        destination-repository-name: 'Redmine-Project'
+        user-email: andry.zhidkikh@gmail.com
+        target-branch: allure-report
+
