@@ -1,42 +1,34 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { ParentPage} from '../page/page';
 
-export class HeaderPage {
-  readonly page: Page;
-  readonly registrationLink: Locator;
-  readonly searchInput: Locator;
-  readonly downloadLink: Locator;
-  readonly roadMapLink: Locator;
-  readonly issuesLink: Locator;
+const registrationLink = ('#top-menu [href*="register"]');
+const searchInput = ('[id="q"]');
+const downloadLink = ('#header [class="download"]');
+const roadMapLink = ('#header [class="roadmap"]');
+const issuesLink = ('#header [class="issues"]')
 
+export class HeaderPage extends ParentPage {
   constructor(page: Page) {
-    this.page = page;
-    this.registrationLink=page.locator('#top-menu [href*="register"]');
-    this.searchInput=page.locator('[id="q"]');
-    this.downloadLink = page.locator('#header [class="download"]');
-    this.roadMapLink = page.locator('#header [class="roadmap"]');
-    this.issuesLink=page.locator('#header [class="issues"]')
+  super(page)
   }
+
   async clickRegistrationLink() {
-    await this.registrationLink.click()
-    await expect(this.page).toHaveURL(/.*register/);
+    await super.click(registrationLink)
+    
   }
-  async fillSearchInput() {
-    await this.searchInput.fill('Defect');
-    await this.page.keyboard.press('Enter');
-    await expect(this.page).toHaveURL(/.*search/);
+  async fillSearchInput(value:string) {
+    await this.fillInputAndEnter(searchInput,value);
   }
   async clickDownloadLink() {
-    await this.downloadLink.click()
-    await expect(this.page).toHaveURL(/.*Download/);
+    await super.click(downloadLink)
+
   }
   async clickRoadMapLink() {
-    await this.roadMapLink.click()
-    await expect(this.page).toHaveURL(/.*roadmap/);
+    await super.click(roadMapLink)
+    
   }
   async clickIssuesLink() {
-    await this.issuesLink.click()
-    await expect(this.page).toHaveURL(/.*issues/);
+    await super.click(issuesLink)
+    
   }
-
-  
 }

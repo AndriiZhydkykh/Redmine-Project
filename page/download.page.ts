@@ -1,19 +1,14 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { ParentPage } from './page';
+const lSourceCodeGithubLink = ('[class="external"][href*="github"]');
 
-export class DownloadPage{
-  readonly page: Page;
-  readonly lSourceCodeGithubLink: Locator;
-  readonly gitHubCodeButton: Locator;
-
+export class DownloadPage extends ParentPage{
   constructor(page: Page) {
-    this.page = page;
-    this.lSourceCodeGithubLink = page.locator('[class="external"][href*="github"]');
-    this.gitHubCodeButton = page.locator(' #code-tab');
+    super(page)
   }
 
   async clickLatestSourceCodeGithubLink() {
-    await this.lSourceCodeGithubLink.click()
-    await expect(this.page).toHaveURL('https://github.com/redmine/redmine');
-    await expect(this.gitHubCodeButton).toBeVisible();
+    await super.click(lSourceCodeGithubLink);
+    
   }
 }

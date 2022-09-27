@@ -1,28 +1,23 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { ParentPage } from './page';
 
-export class SearchPage {
-  readonly page: Page;
-  readonly taskCheckbox: Locator;
-  readonly wikiPageCheckbox: Locator;
-  readonly applyButton: Locator;
-  readonly firstTaskSearchResult: Locator;
+const taskCheckbox = ('#issues');
+const wikiPageCheckbox= ('#wiki_pages');
+const applyButton= ('[name="commit"]');
 
+export class SearchPage extends ParentPage{
   constructor(page: Page) {
-    this.page = page;
-    this.taskCheckbox = page.locator('#issues');
-    this.wikiPageCheckbox=page.locator('#wiki_pages');
-    this.applyButton=page.locator('[name="commit"]');
-    this.firstTaskSearchResult=page.locator('(//*[@class="highlight token-0"][text()="Defect"])[1]');
+    super(page)  
   }
 
   async checkTaskCheckbox() {
-    await this.taskCheckbox.check();
+    await super.check(taskCheckbox);
   }
   async checkWikiPageCheckbox() {
-    await this.wikiPageCheckbox.click();
+    await super.click(wikiPageCheckbox);
   }
   async clickApplyButton() {
-    await this.applyButton.click()
-    await expect(this.firstTaskSearchResult).toBeVisible();
+    await super.click(applyButton);
+    
   } 
 }

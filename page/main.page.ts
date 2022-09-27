@@ -1,19 +1,12 @@
-import { expect, Locator, Page } from '@playwright/test';
+import {Page } from '@playwright/test';
+import {ParentPage} from '../page/page';
 
-export class MainPage {
-  readonly page: Page;
-  readonly getStartedLink: Locator;
-  readonly wikiLink: Locator;
+export class MainPage extends ParentPage{
 
   constructor(page: Page) {
-    this.page = page;
-    this.wikiLink = page.locator('#header [class="wiki selected"]');
+    super(page)
   }
 
   async open() {
-    await this.page.goto('https://www.redmine.org/');
-    await expect(this.page).toHaveURL('https://www.redmine.org/');
-    await expect(this.wikiLink).toBeVisible();
-  }
-
-}
+    await this.page.goto('https://www.redmine.org/'); }
+} 

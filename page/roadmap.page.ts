@@ -1,35 +1,28 @@
-import { expect, Locator, Page } from '@playwright/test';
+import { Page } from '@playwright/test';
+import { ParentPage } from './page';
 
-export class RoadmapPage {
-  readonly page: Page;
-  readonly defectCheckbox: Locator;
-  readonly featureCheckbox: Locator;
-  readonly subProjectCheckbox: Locator;
-  readonly applyButton: Locator;
-  readonly firstPathResultInList: Locator;
+const defectCheckbox=('[name*="tracker"] >> nth=0');
+const featureCheckbox=('input[value="2"]');
+const subProjectCheckbox=('#with_subprojects[type="checkbox"]');
+const applyButton=('[class="button-small"]');
 
+export class RoadmapPage extends ParentPage {
   constructor(page: Page) {
-    this.page = page;
-    this.defectCheckbox=page.locator('[name*="tracker"] >> nth=0');
-    this.featureCheckbox=page.locator('input[value="2"]');
-    this.subProjectCheckbox=page.locator('#with_subprojects[type="checkbox"]');
-    this.applyButton=page.locator('[class="button-small"]');
-    this.firstPathResultInList=page.locator('(//*[@class="subject"]/a[contains(text(), "Patch")])[1]');
+    super(page)
   }
-
 
   async clickDefectCheckbox(){
-    await this.defectCheckbox.click();
+    await super.click(defectCheckbox);
   }
   async clickFeatureCheckbox(){
-    await this.featureCheckbox.click();
+    await super.click(featureCheckbox);
   }
   async clickSubProjectCheckbox(){
-    await this.subProjectCheckbox.click();
+    await super.click(subProjectCheckbox);
   }
   async clickApplyButton(){
-    await this.applyButton.click();
-    await expect(this.firstPathResultInList).toBeVisible()
+    await super.click(applyButton);
+    
   }
   
   

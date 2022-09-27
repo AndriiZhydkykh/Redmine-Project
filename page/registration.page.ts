@@ -1,51 +1,39 @@
-import { expect, Locator, Page } from '@playwright/test';
-import { randomEmail, randomName } from '../helper/script';
-export class RegistrationPage {
-  readonly page: Page;
-  readonly userNameInput: Locator;
-  readonly passwordInput: Locator;
-  readonly confirmPasswordInput: Locator;
-  readonly firstNameInput: Locator;
-  readonly lastNameInput: Locator;
-  readonly emailInput: Locator;
-  readonly applyButton: Locator;
-  readonly flashNoticeConfirmEmail: Locator;
+import { Page } from '@playwright/test';
+import { ParentPage } from './page';
 
+const userNameInput = ('#user_login');
+const passwordInput = ('#user_password');
+const confirmPasswordInput = ('#user_password_confirmation');
+const firstNameInput = ('#user_firstname');
+const lastNameInput = ('#user_lastname');
+const emailInput = ('#user_mail');
+const applyButton = ('[type="submit"]');
+
+export class RegistrationPage extends ParentPage {
   constructor(page: Page) {
-    this.page = page;
-    this.userNameInput = page.locator('#user_login');
-    this.passwordInput=page.locator('#user_password');
-    this.confirmPasswordInput = page.locator('#user_password_confirmation');
-    this.firstNameInput=page.locator('#user_firstname');
-    this.lastNameInput = page.locator('#user_lastname');
-    this.emailInput=page.locator('#user_mail');
-    this.applyButton=page.locator('[type="submit"]');
-    this.flashNoticeConfirmEmail=page.locator('#flash_notice');
-
+    super(page);
   }
 
-  async setUserNameInput() {
-    await this.userNameInput.type(randomName)
+  async setUserNameInput(value:any) {
+    await super.type(userNameInput,value);
   }
-  async setPasswordInput() {
-    await this.passwordInput.type('2181681A')
+  async setPasswordInput(value:any) {
+    await super.type(passwordInput,value);
   }
-  async setConfirmPasswordInput() {
-    await this.confirmPasswordInput.type('2181681A')
+  async setConfirmPasswordInput(value:any) {
+    await super.type(confirmPasswordInput,value);
   }
-  async setFirstNameInput() {
-    await this.firstNameInput.type('UserName')
+  async setFirstNameInput(value:any) {
+    await super.type(firstNameInput,value);
   }
-  async setLastNameInput() {
-    await this.lastNameInput.type('UserLastName')
+  async setLastNameInput(value:any) {
+    await super.type(lastNameInput,value);
   } 
-  async setEmailInput() {
-    await this.emailInput.type(randomEmail); 
+  async setEmailInput(value:any) {
+    await super.type(emailInput,value);
   }
   async clickApplyButton() {
-    await this.applyButton.click(); 
-    await expect(this.page).toHaveURL(/.*login/);
-    await expect(this.flashNoticeConfirmEmail).toBeVisible();
+    await super.click(applyButton);
   }
 
 }

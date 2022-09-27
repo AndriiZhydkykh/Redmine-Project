@@ -1,27 +1,22 @@
-import { expect, Locator, Page } from '@playwright/test';
+import {Page } from '@playwright/test';
+import {ParentPage} from '../page/page';
 
-export class IssuePage {
-  readonly page: Page;
-  readonly chooseStatus: Locator;
-  readonly closedStatusSelect: Locator;
-  readonly applyButton: Locator;
-  readonly firstClosedIssueInList: Locator;
+const chooseStatus =('#operators_status_id');
+const applyButton= ('[class="icon icon-checked"]')
+
+
+export class IssuePage extends ParentPage{
 
   constructor(page: Page) {
-    this.page = page;
-    this.chooseStatus = page.locator('#operators_status_id');
-    this.applyButton= page.locator('[class="icon icon-checked"]')
-    this.firstClosedIssueInList= page.locator('(//*[@class="status"][text()="Closed"])[1]')
+   super(page)
   }
   
-  async chooseClosedStatusInSelect() {
-    await this.chooseStatus.click();
-    await this.chooseStatus.selectOption("c");
+  async chooseClosedStatusInSelect(value:any) {
+    await super.click(chooseStatus);
+    await super.select(chooseStatus,value)
   }
   async clickApplyButton() {
-    await this.applyButton.click();
-    await expect(this.firstClosedIssueInList).toBeVisible();
-    
+    await super.click(applyButton);
   }
   
 }
