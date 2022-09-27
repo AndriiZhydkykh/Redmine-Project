@@ -4,6 +4,9 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    
+  workflow_dispatch:
+    
 jobs:
   test:
     timeout-minutes: 60
@@ -15,36 +18,48 @@ jobs:
         node-version: '14.x'
     - name: Install dependencies
       run: npm ci
+   
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+    
     - name: Run Playwright tests
       run: npx playwright test
-    - uses: actions/checkout@v2
+    
+    - name: Install allure
+      run: npm install -g allure-commandline --save-dev
+    
+    - name: Reports Generate
+      run: npx allure generate ./allure-results --clean    
+      
+    - uses: actions/upload-artifact@master
       with:
-        repository: AndryZhidkih/Redmine-Project
-        ref: allure-report
-        path: ./docs
-    - name: Copy History
-      if: always()
-      run: cp -r $(pwd)/docs/history/. $(pwd)/allure-results/history
-    - name: Generate Allure Report
-      run: npm run generate
-    - uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: allure-report
-        path: allure-report/
-        retention-days: 30
-    - name: Push to repository
-      uses: cpina/github-action-push-to-another-repository@main
-      if: always()
-      env:
-        API_TOKEN_GITHUB: ${{ secrets.ACCESS_TOKEN }}
-      with:
-        source-directory: 'allure-report'
-        destination-github-username: 'AndryZhidkih'
-        destination-repository-name: 'Redmine-Project'
-        user-email: andry.zhidkikh@gmail.com
-        target-branch: allure-report
-
+        name: allure-results
+        path: allure-results
+        retention-days: 20
   
+    - name: Get Allure history
+      uses: actions/checkout@v2
+      if: always()
+      continue-on-error: true
+      with:
+          ref: gh-pages
+          path: gh-pages
+
+    - name: Allure Report action from marketplace
+      uses: simple-elf/allure-report-action@master
+      if: always()
+        #id: allure-report
+      with:
+          allure_results: allure-results
+          gh_pages: gh-pages
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 20
+
+    - name: Deploy report to Github Pages
+      if: always()
+      uses: peaceiris/actions-gh-pages@v2
+      env:
+          PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PUBLISH_BRANCH: gh-pages
+          PUBLISH_DIR: allure-history
